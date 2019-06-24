@@ -3,6 +3,7 @@
 
 package com.microsoft.alm.plugin.external.utils;
 
+import com.google.common.base.Strings;
 import com.intellij.openapi.project.Project;
 import com.microsoft.alm.common.utils.ArgumentHelper;
 import com.microsoft.alm.common.utils.SystemHelper;
@@ -36,6 +37,7 @@ import com.microsoft.alm.plugin.external.commands.SyncCommand;
 import com.microsoft.alm.plugin.external.commands.UndoCommand;
 import com.microsoft.alm.plugin.external.commands.UpdateWorkspaceCommand;
 import com.microsoft.alm.plugin.external.commands.UpdateWorkspaceMappingCommand;
+import com.microsoft.alm.plugin.external.exceptions.ToolStderrException;
 import com.microsoft.alm.plugin.external.models.ChangeSet;
 import com.microsoft.alm.plugin.external.models.Conflict;
 import com.microsoft.alm.plugin.external.models.ConflictResults;
@@ -52,6 +54,8 @@ import com.microsoft.alm.plugin.external.models.TfvcLabel;
 import com.microsoft.alm.plugin.external.models.VersionSpec;
 import com.microsoft.alm.plugin.external.models.Workspace;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +84,35 @@ public class CommandUtils {
     }
 
     /**
+     * This method will return a partially populated Workspace object that includes just the name, server, and mappings.
+     * <p/>
+     * May throw an exception if workspace could not be determined.
+     */
+    public static Workspace getPartialWorkspace(@NotNull String path) {
+        if (Strings.isNullOrEmpty(path)) {
+            return null;
+        }
+
+        FindWorkspaceCommand command = new FindWorkspaceCommand(path);
+        return command.runSynchronously();
+    }
+
+    /**
+     * This method will return a partially populated Workspace object that includes just the name, server, and mappings.
+     * <p/>
+     * Will return null if workspace could not be determined.
+     */
+    @Nullable
+    public static Workspace tryGetPartialWorkspace(@NotNull String path) {
+        try {
+            return getPartialWorkspace(path);
+        } catch (ToolStderrException error) {
+            logger.warn("Error when determining the partial workspace", error);
+            return null;
+        }
+    }
+
+    /**
      * This method will return a partially populated Workspace object that includes just the name, server, and mappings
      *
      * @param project
@@ -87,8 +120,7 @@ public class CommandUtils {
      */
     public static Workspace getPartialWorkspace(final Project project) {
         ArgumentHelper.checkNotNull(project, "project");
-        final FindWorkspaceCommand command = new FindWorkspaceCommand(project.getBasePath());
-        return command.runSynchronously();
+        return getPartialWorkspace(project.getBasePath());
     }
 
     /**

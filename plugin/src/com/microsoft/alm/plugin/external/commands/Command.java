@@ -13,6 +13,7 @@ import com.microsoft.alm.plugin.external.ToolRunnerCache;
 import com.microsoft.alm.plugin.external.exceptions.ToolException;
 import com.microsoft.alm.plugin.external.exceptions.ToolMemoryException;
 import com.microsoft.alm.plugin.external.exceptions.ToolParseFailureException;
+import com.microsoft.alm.plugin.external.exceptions.ToolStderrException;
 import com.microsoft.alm.plugin.external.models.Workspace;
 import com.microsoft.alm.plugin.external.tools.TfTool;
 import com.microsoft.alm.plugin.external.utils.WorkspaceHelper;
@@ -406,8 +407,7 @@ public abstract class Command<T> {
 
     protected void throwIfError(final String stderr) {
         if (StringUtils.isNotEmpty(stderr)) {
-            //TODO what kind of exception should this be?
-            throw new RuntimeException(stderr);
+            throw new ToolStderrException(stderr);
         }
     }
 

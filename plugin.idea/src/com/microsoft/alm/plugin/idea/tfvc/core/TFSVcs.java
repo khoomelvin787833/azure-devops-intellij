@@ -176,13 +176,6 @@ public class TFSVcs extends AbstractVcs {
         return isVersionedDirectory(filePath.getVirtualFile());
     }
 
-    /**
-     * Overrides method from IDEA 2019.2 that will allow us to work without "new" root mappings.
-     */
-    public boolean needsLegacyDefaultMappings() {
-        return true;
-    }
-
     @NotNull
     public CommittedChangesProvider<TFSChangeList, ChangeBrowserSettings> getCommittedChangesProvider() {
         if (committedChangesProvider == null) {

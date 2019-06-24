@@ -91,6 +91,7 @@
         <applicationService serviceInterface="com.microsoft.alm.plugin.idea.common.settings.TeamServicesSettingsService"
                             serviceImplementation="com.microsoft.alm.plugin.idea.common.settings.TeamServicesSettingsService"/>
         <vcsConfigurableProvider implementation="com.microsoft.alm.plugin.idea.common.ui.settings.TeamServicesConfigurable"/>
+        <vcsRootChecker implementation="com.microsoft.alm.plugin.idea.tfvc.core.TFSRootChecker"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
