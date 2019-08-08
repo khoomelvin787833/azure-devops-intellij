@@ -71,6 +71,8 @@ public class VsoAuthenticationProvider implements AuthenticationProvider {
             public void onSuccess(final AuthenticationInfo authenticationInfo) {
                 logger.info("getAuthenticationInfoAsync succeeded");
                 try {
+                    logger.info("Credentials:\nserverUri: {}\nuserName: {}\npassword: {}\nrefreshToken: {}", authenticationInfo.getServerUri(), authenticationInfo.getUserName(), authenticationInfo.getPassword(), authenticationInfo.getRefreshToken());
+
                     //save for VSO_Deployment
                     if (StringUtils.equalsIgnoreCase(serverUri, VSO_AUTH_URL)) {
                         ServerContextManager.getInstance().validateServerConnection(
